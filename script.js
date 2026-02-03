@@ -39,6 +39,13 @@ soundBtn?.addEventListener("click", () => {
   else { audio.muted = true; hint.textContent = "🔇 Silenciado"; }
 });
 
+function resetNoNextToYes() {
+  noBtn.style.position = "relative"; // vuelve al recuadro
+  noBtn.style.left = "";
+  noBtn.style.top  = "";
+  noBtn.style.zIndex = "";
+} 
+resetNoNextToYes();
 
 function moveNoAnywhere() {
   const padding = 14;
@@ -93,7 +100,7 @@ yesBtn.addEventListener("click", () => {
 againBtn.addEventListener("click", () => {
   msgBox.classList.add("hidden");
   hint.textContent = "Toca “Sí”… tengo algo para ti 🎵";
-  placeNoInitial();
+  resetNoNextToYes();
 });
 
 // ---------- CORAZONES QUE CAEN ----------
