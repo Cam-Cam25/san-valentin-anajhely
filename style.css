@@ -168,8 +168,9 @@ body{
   background: rgba(255,255,255,.75);
   border: 1px solid rgba(0,0,0,.12);
   color:#222;
-  position: fixed; /* importante: para moverse por toda la pantalla */
-  z-index: 9999;   /* siempre arriba */
+
+  position: relative;   /* 🔴 empieza normal */
+  z-index: 5;
 }
 
 .ghost{
