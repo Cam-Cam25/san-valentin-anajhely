@@ -91,8 +91,10 @@ function showNoMessage() {
 
 // --- Botón SÍ: mensaje final romántico + gracioso + confeti ---
 yesBtn.addEventListener("click", () => {
+  audio.volume = 0.7;
+  audio.play();
   showFinal();
-  startConfetti(2600);
+  startConfetti(3200);
 });
 
 function showFinal() {
