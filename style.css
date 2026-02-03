@@ -1,102 +1,204 @@
-*{
-  box-sizing:border-box;
+:root{
+  --glass: rgba(255,255,255,.18); /* más transparente */
+  --glass2: rgba(255,255,255,.08);
+  --text: #1f1f1f;
 }
 
-html,body{
-  height:100%;
-}
-
+*{box-sizing:border-box}
+html,body{height:100%}
 body{
   margin:0;
+  color: var(--text);
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color:#1f1f1f;
   overflow:hidden;
+}
 
+/* =========================
+   FONDO COLLAGE
+========================= */
+.collage{
+  position:fixed; inset:0;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 8px;
+  padding: 12px;
+  opacity: .22;             /* intensidad del collage */
+  filter: blur(1px) saturate(1.15) contrast(1.05);
+  transform: scale(1.04);
+  z-index:-5;
+}
+.collage img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius: 18px;
+}
+
+/* oscurece y unifica el collage para que se vea romántico */
+.collage-overlay{
+  position:fixed; inset:0;
   background:
-    radial-gradient(1200px 800px at 20% 10%, #ffd1dc, transparent 60%),
-    radial-gradient(1200px 800px at 80% 90%, #ff8fb1, transparent 60%),
-    linear-gradient(135deg, #ff4d8d, #ff9fc2, #ffd1dc);
+    radial-gradient(900px 600px at 20% 10%, rgba(255,190,210,.45), transparent 60%),
+    radial-gradient(900px 600px at 80% 90%, rgba(255,120,170,.38), transparent 55%),
+    linear-gradient(135deg, rgba(255,70,140,.38), rgba(255,160,200,.35), rgba(255,210,225,.40));
+  z-index:-4;
 }
 
-/* Fondo con corazones */
-.bg-hearts{
-  position:fixed;
-  inset:0;
+/* =========================
+   FLORES DECORATIVAS
+========================= */
+.floral-frame{
+  position:fixed; inset:0;
   pointer-events:none;
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(255,255,255,.35) 0 6px, transparent 7px),
-    radial-gradient(circle at 80% 30%, rgba(255,255,255,.28) 0 7px, transparent 8px),
-    radial-gradient(circle at 30% 80%, rgba(255,255,255,.22) 0 6px, transparent 7px);
-  animation: floatBg 8s ease-in-out infinite alternate;
+  z-index:-2;
 }
 
-@keyframes floatBg{
-  from{transform:translateY(0)}
-  to{transform:translateY(-20px)}
+/* “Flores” estilo ilustración simple (gerbera/lirio/peonía abstracta) */
+.flower{
+  position:absolute;
+  width: 210px;
+  height: 210px;
+  opacity: .85;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,.12));
 }
 
-/* 🪟 CUADRO PRINCIPAL (VIDRIO REAL) */
+/* Cada esquina */
+.top-left{ top:-30px; left:-30px; transform: rotate(-12deg); }
+.top-right{ top:-30px; right:-30px; transform: rotate(18deg); }
+.bottom-left{ bottom:-40px; left:-30px; transform: rotate(8deg); }
+.bottom-right{ bottom:-40px; right:-30px; transform: rotate(-16deg); }
+
+/* Flor vectorial en CSS (capas tipo peonía/gerbera) */
+.flower::before,
+.flower::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.9) 0 18%, transparent 19%),
+    radial-gradient(circle at 50% 50%, rgba(255,210,225,.95) 0 34%, transparent 35%),
+    radial-gradient(circle at 30% 35%, rgba(255,120,170,.65) 0 40%, transparent 41%),
+    radial-gradient(circle at 70% 35%, rgba(255,120,170,.60) 0 40%, transparent 41%),
+    radial-gradient(circle at 35% 70%, rgba(255,160,200,.55) 0 44%, transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(255,160,200,.55) 0 44%, transparent 45%);
+}
+.flower::after{
+  transform: scale(.78);
+  opacity:.9;
+  filter: blur(.2px);
+}
+
+/* Guirnaldas arriba/abajo (lirios/hojas estilizadas) */
+.garland{
+  position:absolute;
+  left:0; right:0;
+  height: 120px;
+  opacity: .55;
+  filter: blur(.2px);
+  background:
+    radial-gradient(circle at 10% 50%, rgba(255,255,255,.45) 0 18px, transparent 19px),
+    radial-gradient(circle at 20% 30%, rgba(255,230,240,.55) 0 22px, transparent 23px),
+    radial-gradient(circle at 35% 60%, rgba(255,180,210,.50) 0 18px, transparent 19px),
+    radial-gradient(circle at 50% 35%, rgba(255,255,255,.45) 0 22px, transparent 23px),
+    radial-gradient(circle at 65% 55%, rgba(255,170,205,.50) 0 18px, transparent 19px),
+    radial-gradient(circle at 80% 30%, rgba(255,230,240,.55) 0 22px, transparent 23px),
+    radial-gradient(circle at 90% 55%, rgba(255,255,255,.45) 0 18px, transparent 19px);
+}
+.garland.top{ top:-35px; }
+.garland.bottom{ bottom:-35px; transform: rotate(180deg); }
+
+/* =========================
+   CORAZONES QUE CAEN
+========================= */
+#heartsLayer{
+  position:fixed; inset:0;
+  pointer-events:none;
+  z-index:-1;
+}
+
+.heart-fall{
+  position:fixed;
+  top:-40px;
+  left: 50%;
+  font-size: 22px;
+  opacity:.9;
+  filter: drop-shadow(0 10px 10px rgba(0,0,0,.10));
+  animation: fall linear forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes fall{
+  to{
+    transform: translate3d(var(--drift), 110vh, 0) rotate(var(--rot));
+    opacity: 0.15;
+  }
+}
+
+/* =========================
+   CONTENEDOR CENTRADO
+========================= */
+.wrap{
+  min-height: 100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 18px;
+}
+
+/* =========================
+   CARD GLASS (más transparente)
+========================= */
 .card{
-  position:relative;
-  width:min(720px, 95vw);
-  margin:5vh auto 0;
-  padding:44px 42px 34px;
+  width: min(780px, 94vw);
+  padding: 46px 42px 34px;
+  text-align:center;
 
-  background: rgba(255,255,255,0.38);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,.30);
+  border-radius: 34px;
 
-  border-radius:30px;
-  border:1px solid rgba(255,255,255,0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 
   box-shadow:
-    0 40px 90px rgba(0,0,0,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.45);
+    0 45px 120px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.38);
 
-  text-align:center;
-  animation: fadeUp 0.9s ease-out;
-}
-
-@keyframes fadeUp{
-  from{
-    opacity:0;
-    transform:translateY(30px) scale(0.96);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
+  position:relative;
 }
 
 .badge{
   display:inline-block;
-  padding:8px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,0.75);
-  font-size:.95rem;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.30);
+  border: 1px solid rgba(255,255,255,.28);
+  font-size: .95rem;
 }
 
-h1{
-  margin:20px 0 14px;
-  font-size:clamp(2.2rem, 5vw, 2.9rem);
-  font-weight:800;
+.title{
+  margin: 18px 0 10px;
+  font-size: clamp(2.2rem, 4.8vw, 3rem);
+  font-weight: 900;
+  letter-spacing: .3px;
 }
 
-.heart{
+.pulse{
   display:inline-block;
-  animation:pulse 1.2s infinite;
+  animation: pulse 1.2s infinite;
 }
-
 @keyframes pulse{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.15)}
 }
 
 .question{
-  font-size:1.1rem;
-  margin-bottom:20px;
+  margin: 8px 0 20px;
+  font-size: 1.12rem;
+  line-height: 1.35;
 }
-
 .sub{
   display:block;
   margin-top:8px;
@@ -106,69 +208,75 @@ h1{
 .controls{
   display:flex;
   justify-content:center;
-  gap:14px;
-  margin-bottom:14px;
-  position:relative;
+  gap: 14px;
+  margin: 14px 0 10px;
 }
 
 .btn{
-  padding:12px 22px;
-  border-radius:999px;
-  border:none;
-  font-size:1.05rem;
+  border:0;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 1.05rem;
   cursor:pointer;
-  box-shadow:0 10px 25px rgba(0,0,0,.15);
-  transition:.15s;
+  user-select:none;
+  box-shadow: 0 14px 30px rgba(0,0,0,.15);
+  transition: transform .08s ease, filter .2s ease;
 }
-
-.btn:active{
-  transform:scale(.97);
-}
+.btn:active{ transform: scale(.98); }
 
 .yes{
-  background:linear-gradient(135deg,#ff2d7a,#ff7aa2);
-  color:white;
-  font-weight:700;
+  background: linear-gradient(135deg, #ff2d7a, #ff7aa2);
+  color: white;
+  font-weight: 800;
 }
 
 .no{
-  background:white;
-  border:1px solid rgba(0,0,0,.15);
+  background: rgba(255,255,255,.75);
+  border: 1px solid rgba(0,0,0,.12);
+  color:#222;
+  position: fixed; /* importante: para moverse por toda la pantalla */
+  z-index: 9999;   /* siempre arriba */
 }
 
 .ghost{
-  background:rgba(255,255,255,.75);
+  background: rgba(255,255,255,.30);
+  border: 1px solid rgba(255,255,255,.20);
+  box-shadow:none;
 }
 
 .hint{
-  font-size:.95rem;
-  opacity:.8;
-}
-
-.message{
-  margin-top:18px;
-  padding:18px;
-  border-radius:18px;
-  background:rgba(255,255,255,.75);
-}
-
-.hidden{
-  display:none;
-}
-
-.footer{
-  margin-top:14px;
-  font-size:.95rem;
+  margin: 10px 0 0;
+  font-size: .95rem;
   opacity:.85;
 }
 
-/* Confetti */
+.message{
+  margin-top: 18px;
+  padding: 16px 16px 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.22);
+  border: 1px solid rgba(255,255,255,.18);
+}
+.hidden{ display:none; }
+
+.actions{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top: 10px;
+}
+
+.footer{
+  margin-top: 14px;
+  font-size: .95rem;
+  opacity:.85;
+}
+
+/* confetti */
 #confetti{
   position:fixed;
   inset:0;
   pointer-events:none;
-}
-
-.card {
-  animation: fadeUp 0.9s ease-out;
+  z-index: 10;
 }
