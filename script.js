@@ -39,15 +39,6 @@ soundBtn?.addEventListener("click", () => {
   else { audio.muted = true; hint.textContent = "🔇 Silenciado"; }
 });
 
-// ---------- BOTÓN NO POR TODA LA PANTALLA ----------
-function placeNoInitial() {
-  // Colócalo cerca del centro al inicio
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
-  noBtn.style.left = (cx + 80) + "px";
-  noBtn.style.top  = (cy + 40) + "px";
-}
-placeNoInitial();
 
 function moveNoAnywhere() {
   const padding = 14;
