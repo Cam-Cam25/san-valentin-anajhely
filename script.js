@@ -1,92 +1,185 @@
 const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
+const noBtn  = document.getElementById("noBtn");
 const msgBox = document.getElementById("messageBox");
 const againBtn = document.getElementById("againBtn");
 const hint = document.getElementById("hint");
+const soundBtn = document.getElementById("soundBtn");
 const audio = document.getElementById("bgMusic");
 
-let noCount = 0;
-const noTexts = [
-  "¿Segura? 🥺",
-  "El botón No está asustado 😅",
-  "Piénsalo otra vez 😳",
-  "Kevin confía en ti 💙",
-  "Última oportunidad 😭"
-];
+// ---------- MÚSICA “EN TODO MOMENTO” (realista) ----------
+// Importante: navegadores móviles NO permiten audio con sonido sin interacción.
+// Lo más cercano a “siempre”: autoplay muted + al primer toque se activa con sonido.
+function attemptAutoplay() {
+  audio.muted = true;
+  audio.volume = 0.8;
+  const p = audio.play();
+  if (p && typeof p.then === "function") {
+    p.catch(() => {
+      // si el navegador bloquea, se activará con cualquier toque
+    });
+  }
+}
+attemptAutoplay();
 
-/* BOTÓN NO QUE HUYE */
-function moveNo(){
-  const parent = noBtn.parentElement;
-  const maxX = parent.clientWidth - noBtn.offsetWidth;
-  const maxY = parent.clientHeight - noBtn.offsetHeight;
-
-  noBtn.style.position = "absolute";
-  noBtn.style.left = Math.random()*maxX + "px";
-  noBtn.style.top  = Math.random()*maxY + "px";
-
-  hint.textContent = noTexts[Math.min(noCount, noTexts.length-1)];
-  noCount++;
+function enableSound() {
+  audio.muted = false;
+  audio.volume = 0.85;
+  audio.play().catch(()=>{});
+  hint.textContent = "🎵 Música activada";
 }
 
-noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("click", e => {
+document.addEventListener("click", () => {
+  // primer click de la usuaria: activamos sonido
+  if (audio.muted) enableSound();
+}, { once: true });
+
+soundBtn?.addEventListener("click", () => {
+  if (audio.muted) enableSound();
+  else { audio.muted = true; hint.textContent = "🔇 Silenciado"; }
+});
+
+// ---------- BOTÓN NO POR TODA LA PANTALLA ----------
+function placeNoInitial() {
+  // Colócalo cerca del centro al inicio
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  noBtn.style.left = (cx + 80) + "px";
+  noBtn.style.top  = (cy + 40) + "px";
+}
+placeNoInitial();
+
+function moveNoAnywhere() {
+  const padding = 14;
+  const btnRect = noBtn.getBoundingClientRect();
+
+  const maxX = window.innerWidth - btnRect.width - padding;
+  const maxY = window.innerHeight - btnRect.height - padding;
+
+  const x = Math.max(padding, Math.random() * maxX);
+  const y = Math.max(padding, Math.random() * maxY);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top  = y + "px";
+
+  // Mensajitos graciosos
+  const msgs = [
+    "¿Segurísima? 🥺",
+    "El NO está huyendo 😂",
+    "Intenta atraparme 😳",
+    "El SÍ se ve mejor 😏",
+    "Kevin confía en ti 💙"
+  ];
+  hint.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+}
+
+// PC: cuando acerque el mouse
+noBtn.addEventListener("mouseenter", moveNoAnywhere);
+// Móvil: cuando intente tocar
+noBtn.addEventListener("touchstart", (e) => {
   e.preventDefault();
-  moveNo();
+  moveNoAnywhere();
+}, { passive:false });
+// Click (por si logra)
+noBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  moveNoAnywhere();
 });
 
-/* BOTÓN SÍ */
+// ---------- BOTÓN SÍ ----------
 yesBtn.addEventListener("click", () => {
-  audio.volume = 0.7;
-  audio.play();
-
+  enableSound(); // al decir sí, garantizamos sonido
   msgBox.classList.remove("hidden");
-  hint.textContent = "💖🎵";
-
-  launchConfetti();
+  startConfetti(2800);
+  hint.textContent = "💖💖💖";
 });
 
-/* REPETIR */
+// Repetir
 againBtn.addEventListener("click", () => {
   msgBox.classList.add("hidden");
-  noBtn.style.position = "relative";
-  noBtn.style.left = "";
-  noBtn.style.top = "";
-  hint.textContent = "Toca “Sí”… tengo una sorpresa 🎵";
+  hint.textContent = "Toca “Sí”… tengo algo para ti 🎵";
+  placeNoInitial();
 });
 
-/* CONFETTI */
+// ---------- CORAZONES QUE CAEN ----------
+const heartsLayer = document.getElementById("heartsLayer");
+const heartChars = ["💗","💖","💕","💘","❤️"];
+
+function spawnHeart() {
+  const el = document.createElement("div");
+  el.className = "heart-fall";
+  el.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+
+  const size = 16 + Math.random() * 26;
+  const x = Math.random() * window.innerWidth;
+
+  const drift = (Math.random() * 160 - 80) + "px";
+  const rot = (Math.random() * 160 - 80) + "deg";
+  const dur = (6 + Math.random() * 6); // 6-12s
+
+  el.style.left = x + "px";
+  el.style.fontSize = size + "px";
+  el.style.setProperty("--drift", drift);
+  el.style.setProperty("--rot", rot);
+  el.style.animationDuration = dur + "s";
+
+  heartsLayer.appendChild(el);
+
+  setTimeout(() => el.remove(), (dur * 1000) + 300);
+}
+
+// genera corazones siempre
+setInterval(spawnHeart, 260);
+
+// ---------- CONFETTI ----------
 const canvas = document.getElementById("confetti");
 const ctx = canvas.getContext("2d");
 
-function resize(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+function resizeCanvas(){
+  canvas.width = window.innerWidth * devicePixelRatio;
+  canvas.height = window.innerHeight * devicePixelRatio;
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
 }
-window.addEventListener("resize", resize);
-resize();
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
 
-function launchConfetti(){
-  const pieces = Array.from({length:180}, () => ({
-    x:Math.random()*canvas.width,
-    y:-20,
-    r:Math.random()*6+4,
-    d:Math.random()*canvas.height,
-    c:`hsl(${Math.random()*360},80%,70%)`
+function startConfetti(ms=2500){
+  const end = performance.now() + ms;
+  const pieces = Array.from({length:160}, () => ({
+    x: Math.random()*window.innerWidth,
+    y: -20 - Math.random()*200,
+    w: 6 + Math.random()*6,
+    h: 8 + Math.random()*12,
+    vx: (Math.random()-0.5)*3,
+    vy: 2 + Math.random()*4,
+    r: Math.random()*Math.PI,
+    vr: (Math.random()-0.5)*0.2,
+    a: 0.7 + Math.random()*0.3
   }));
 
-  let frame = 0;
-  function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    pieces.forEach(p=>{
-      ctx.beginPath();
-      ctx.fillStyle=p.c;
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fill();
-      p.y+=Math.cos(frame+p.d)+3;
-    });
-    frame+=0.02;
-    if(frame<200) requestAnimationFrame(draw);
+  function frame(t){
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+    for (const p of pieces){
+      p.x += p.vx;
+      p.y += p.vy;
+      p.r += p.vr;
+
+      ctx.save();
+      ctx.globalAlpha = p.a;
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.r);
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    }
+    // limpia piezas fuera
+    for (let i=pieces.length-1;i>=0;i--){
+      if (pieces[i].y > window.innerHeight + 40) pieces.splice(i,1);
+    }
+    if (t < end && pieces.length){
+      requestAnimationFrame(frame);
+    } else {
+      ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+    }
   }
-  draw();
+  requestAnimationFrame(frame);
 }
 
