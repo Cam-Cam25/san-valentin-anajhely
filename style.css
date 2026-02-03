@@ -20,20 +20,22 @@ body{
   position:fixed; inset:0;
   display:grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 1fr;
-  gap: 8px;
-  padding: 12px;
-  opacity: .22;             /* intensidad del collage */
-  filter: blur(1px) saturate(1.15) contrast(1.05);
-  transform: scale(1.04);
+  gap: 10px;
+  padding: 14px;
+
+  opacity: .35;          /* subimos para que se note */
+  filter: blur(.6px) saturate(1.2) contrast(1.05);
+  transform: scale(1.03);
   z-index:-5;
 }
+
 .collage img{
   width:100%;
   height:100%;
   object-fit:cover;
-  border-radius: 18px;
+  border-radius:18px;
 }
+
 
 /* oscurece y unifica el collage para que se vea romántico */
 .collage-overlay{
