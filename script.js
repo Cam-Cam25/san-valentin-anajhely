@@ -184,3 +184,20 @@ function startConfetti(ms=2500){
   requestAnimationFrame(frame);
 }
 
+// ---------- COLLAGE DINÁMICO ----------
+const collage = document.getElementById("collage");
+
+// Ajusta aquí cuántas fotos tienes
+const totalPhotos = 6;
+
+for (let i = 1; i <= totalPhotos; i++) {
+  const img = document.createElement("img");
+  img.src = `assets/photos/${i}.jpeg`;
+  img.alt = "";
+  img.loading = "lazy";
+
+  // si alguna foto no existe, la quitamos y seguimos
+  img.onerror = () => img.remove();
+
+  collage.appendChild(img);
+}
