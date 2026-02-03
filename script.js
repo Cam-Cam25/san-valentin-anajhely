@@ -5,6 +5,8 @@ const againBtn = document.getElementById("againBtn");
 const hint = document.getElementById("hint");
 const soundBtn = document.getElementById("soundBtn");
 const audio = document.getElementById("bgMusic");
+const controls = document.querySelector(".controls");
+
 alert("JS nuevo cargado ❤️");
 
 // ---------- MÚSICA “EN TODO MOMENTO” (realista) ----------
@@ -46,41 +48,64 @@ function resetNoNextToYes() {
   noBtn.style.zIndex = "";
 } 
 resetNoNextToYes();
+// ---------- BOTÓN NO (solo se mueve dentro del recuadro) ----------
+const controls = document.querySelector(".controls");
 
-function moveNoAnywhere() {
-  const padding = 40; // 🔥 margen seguro para que NO se salga
+function placeNoNextToYes() {
+  // lo colocamos a la derecha del "Sí" dentro del recuadro
+  noBtn.style.position = "absolute";
+  noBtn.style.left = "62%";
+  noBtn.style.top  = "50%";
+  noBtn.style.transform = "translate(-50%, -50%)";
+}
+placeNoNextToYes();
 
-  // cuando huye, pasa a pantalla completa
-  noBtn.style.position = "fixed";
-  noBtn.style.zIndex = "9999";
+function moveNoInsideBox() {
+  const padding = 8;
 
-  const rect = noBtn.getBoundingClientRect();
+  const box = controls.getBoundingClientRect();
+  const btn = noBtn.getBoundingClientRect();
 
-  const maxX = window.innerWidth - rect.width - padding;
-  const maxY = window.innerHeight - rect.height - padding;
+  // límites dentro del recuadro
+  const maxX = box.width - btn.width - padding;
+  const maxY = box.height - btn.height - padding;
 
-  // si la pantalla es muy pequeña, vuelve al recuadro
-  if (maxX <= padding || maxY <= padding) {
-    resetNoNextToYes();
-    return;
-  }
+  // por seguridad
+  if (maxX <= padding || maxY <= padding) return;
 
-  // 🔒 LIMITAMOS el rango para que siempre quede visible
-  const x = Math.floor(Math.random() * (maxX - padding)) + padding;
-  const y = Math.floor(Math.random() * (maxY - padding)) + padding;
+  const x = Math.floor(Math.random() * maxX) + padding;
+  const y = Math.floor(Math.random() * maxY) + padding;
 
+  // coordenadas relativas al recuadro
   noBtn.style.left = x + "px";
   noBtn.style.top  = y + "px";
+  noBtn.style.transform = "translate(0, 0)";
 
   const msgs = [
-    "¿Segurísima? 🥺",
-    "Hey 😳 por aquí no",
-    "Sigo cerca 😏",
-    "El Sí se ve mejor 💖",
+    "¿Segura? 😳",
+    "Nope 😅",
+    "Intenta otra vez 😂",
+    "Jeje 💘",
     "Kevin confía en ti 💙"
   ];
   hint.textContent = msgs[Math.floor(Math.random() * msgs.length)];
 }
+
+// PC: cuando acerquen el mouse
+noBtn.addEventListener("mouseenter", moveNoInsideBox);
+
+// Móvil: cuando intenten tocar
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  moveNoInsideBox();
+}, { passive:false });
+
+// Click (si lo logran)
+noBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  moveNoInsideBox();
+});
+
 
 
 // PC: cuando acerque el mouse
