@@ -7,8 +7,6 @@ const soundBtn = document.getElementById("soundBtn");
 const audio = document.getElementById("bgMusic");
 const controls = document.querySelector(".controls");
 
-alert("JS nuevo cargado ❤️");
-
 // ---------- MÚSICA “EN TODO MOMENTO” (realista) ----------
 // Importante: navegadores móviles NO permiten audio con sonido sin interacción.
 // Lo más cercano a “siempre”: autoplay muted + al primer toque se activa con sonido.
