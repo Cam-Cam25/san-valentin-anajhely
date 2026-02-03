@@ -168,13 +168,13 @@ body{
   color: white;
   font-weight: 800;
 }
-
 .no{
-  position: absolute;         /* se moverá dentro del .controls */
-  left: 50%;                  /* arranca cerca del centro */
+  position: absolute;      /* se moverá dentro del .controls */
+  left: calc(50% + 80px);  /* 👉 lo manda a la derecha del Sí */
   top: 50%;
   transform: translate(-50%, -50%);
 }
+
 
 
 .ghost{
