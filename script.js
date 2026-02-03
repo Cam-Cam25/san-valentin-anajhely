@@ -188,7 +188,7 @@ function startConfetti(ms=2500){
 const collage = document.getElementById("collage");
 
 // Ajusta aquí cuántas fotos tienes
-const totalPhotos = 6;
+const totalPhotos = 8;
 
 for (let i = 1; i <= totalPhotos; i++) {
   const img = document.createElement("img");
