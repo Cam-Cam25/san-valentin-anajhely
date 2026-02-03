@@ -48,32 +48,40 @@ function resetNoNextToYes() {
 resetNoNextToYes();
 
 function moveNoAnywhere() {
-  const padding = 14;
+  const padding = 40; // 🔥 margen seguro para que NO se salga
 
-  // SOLO cuando huye: lo ponemos "fixed" para moverse por toda la pantalla
+  // cuando huye, pasa a pantalla completa
   noBtn.style.position = "fixed";
   noBtn.style.zIndex = "9999";
 
-  const btnRect = noBtn.getBoundingClientRect();
+  const rect = noBtn.getBoundingClientRect();
 
-  const maxX = window.innerWidth - btnRect.width - padding;
-  const maxY = window.innerHeight - btnRect.height - padding;
+  const maxX = window.innerWidth - rect.width - padding;
+  const maxY = window.innerHeight - rect.height - padding;
 
-  const x = Math.random() * maxX + padding;
-  const y = Math.random() * maxY + padding;
+  // si la pantalla es muy pequeña, vuelve al recuadro
+  if (maxX <= padding || maxY <= padding) {
+    resetNoNextToYes();
+    return;
+  }
+
+  // 🔒 LIMITAMOS el rango para que siempre quede visible
+  const x = Math.floor(Math.random() * (maxX - padding)) + padding;
+  const y = Math.floor(Math.random() * (maxY - padding)) + padding;
 
   noBtn.style.left = x + "px";
   noBtn.style.top  = y + "px";
 
   const msgs = [
     "¿Segurísima? 🥺",
-    "El NO está huyendo 😂",
-    "Intenta atraparme 😳",
-    "El SÍ se ve mejor 😏",
+    "Hey 😳 por aquí no",
+    "Sigo cerca 😏",
+    "El Sí se ve mejor 💖",
     "Kevin confía en ti 💙"
   ];
-  hint.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+  hint.textContent = msgs[Math.floor(Math.random() * msgs.length)];
 }
+
 
 // PC: cuando acerque el mouse
 noBtn.addEventListener("mouseenter", moveNoAnywhere);
