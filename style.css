@@ -11,7 +11,6 @@ body{
   color:#1f1f1f;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   overflow:hidden;
-  background:#0f0f14; /* fondo oscuro neutro */
 }
 
 /* =========================
@@ -41,10 +40,6 @@ body{
 /* oscurece y unifica el collage para que se vea romántico */
 .collage-overlay{
   position:fixed; inset:0;
-  background:
-    radial-gradient(900px 600px at 20% 10%, rgba(255,190,210,.45), transparent 60%),
-    radial-gradient(900px 600px at 80% 90%, rgba(255,120,170,.38), transparent 55%),
-    linear-gradient(135deg, rgba(255,70,140,.38), rgba(255,160,200,.35), rgba(255,210,225,.40));
   z-index:-4;
 }
 
