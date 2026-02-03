@@ -1,160 +1,203 @@
-:root{
-  --bg1:#ff8fb1;
-  --bg2:#ffd1dc;
-  --card:#ffffffd9;
-  --text:#1f1f1f;
-  --shadow: 0 20px 60px rgba(0,0,0,.18);
-  --radius: 22px;
+const yesBtn = document.getElementById("yesBtn");
+const noBtn  = document.getElementById("noBtn");
+const msgBox = document.getElementById("messageBox");
+const msgTitle = document.getElementById("msgTitle");
+const msgText  = document.getElementById("msgText");
+const againBtn = document.getElementById("againBtn");
+const shareBtn = document.getElementById("shareBtn");
+const hint = document.getElementById("hint");
+
+const audio = document.getElementById("bgMusic");
+
+// Mensajes troll para el botón "No"
+const noMessages = [
+  "¿Segurísima? 🥺",
+  "El botón No tiembla… 😅",
+  "No te creo… intenta otra vez 😏",
+  "Te juro que ‘Sí’ se ve mejor 👀",
+  "Anajhely… porfa 🥹",
+  "Kevin está a punto de llorar 😭",
+  "Ok, última oportunidad… 😳",
+  "El ‘No’ se fue a comprar flores y no volvió 🌹"
+];
+
+let noCount = 0;
+
+// --- Música: en móviles requiere interacción ---
+function tryPlayMusic() {
+  audio.volume = 0.5;
+  audio.play().then(() => {
+    hint.textContent = "🎵 Música activada";
+    setTimeout(() => hint.style.display = "none", 1400);
+  }).catch(() => {
+    // Si el navegador bloquea autoplay, no pasa nada.
+  });
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color:var(--text);
-  overflow:hidden;
-  background: radial-gradient(1200px 800px at 20% 10%, var(--bg2), transparent 60%),
-              radial-gradient(1200px 800px at 80% 90%, var(--bg1), transparent 60%),
-              linear-gradient(135deg, #ffd6e7, #ff9fc2);
+// Intenta al cargar (en PC a veces funciona)
+tryPlayMusic();
+
+// Si toca cualquier parte, arrancamos música
+document.addEventListener("click", () => tryPlayMusic(), { once: true });
+
+// --- Botón NO: se mueve y cambia texto ---
+function moveNoButton() {
+  const area = document.querySelector(".controls");
+  const rect = area.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+
+  // límites dentro del contenedor
+  const maxX = rect.width  - btnRect.width;
+  const maxY = rect.height - btnRect.height;
+
+  // si el contenedor es muy pequeño, no lo muevas tanto
+  const x = Math.max(0, Math.random() * maxX);
+  const y = Math.max(0, Math.random() * maxY);
+
+  noBtn.style.position = "absolute";
+  noBtn.style.left = `${x}px`;
+  noBtn.style.top  = `${y}px`;
 }
 
-/* Corazones flotando */
-.bg-hearts{
-  position:fixed; inset:0;
-  pointer-events:none;
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(255,255,255,.25) 0 6px, transparent 7px),
-    radial-gradient(circle at 80% 30%, rgba(255,255,255,.22) 0 7px, transparent 8px),
-    radial-gradient(circle at 30% 80%, rgba(255,255,255,.18) 0 6px, transparent 7px);
-  filter: blur(0.2px);
-  animation: floatBg 8s ease-in-out infinite alternate;
-}
-@keyframes floatBg{
-  from{transform:translateY(0)}
-  to{transform:translateY(-18px)}
+noBtn.addEventListener("mouseenter", () => {
+  // PC: al pasar el mouse
+  moveNoButton();
+});
+
+noBtn.addEventListener("touchstart", (e) => {
+  // Móvil: al intentar tocar
+  e.preventDefault();
+  moveNoButton();
+  showNoMessage();
+}, { passive: false });
+
+noBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  moveNoButton();
+  showNoMessage();
+});
+
+function showNoMessage() {
+  const msg = noMessages[Math.min(noCount, noMessages.length - 1)];
+  noCount++;
+  hint.style.display = "block";
+  hint.textContent = msg;
+
+  // hacer que "Sí" se vea más tentador cada vez 😏
+  const scale = 1 + Math.min(noCount * 0.06, 0.45);
+  yesBtn.style.transform = `scale(${scale})`;
+  yesBtn.style.filter = `brightness(${1 + Math.min(noCount * 0.08, 0.6)})`;
 }
 
-.card{
-  position:relative;
-  width:min(560px, 92vw);
-  margin: 8vh auto 0;
-  padding: 26px 22px 18px;
-  background:var(--card);
-  border: 1px solid rgba(255,255,255,.7);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(8px);
-  text-align:center;
+// --- Botón SÍ: mensaje final romántico + gracioso + confeti ---
+yesBtn.addEventListener("click", () => {
+  showFinal();
+  startConfetti(2600);
+});
+
+function showFinal() {
+  msgBox.classList.remove("hidden");
+  msgTitle.textContent = "¡SÍ! 💖🥳";
+  msgText.innerHTML = `
+    <b>Anajhely</b>, oficialmente acabas de hacer a <b>Kevin</b> la persona más feliz 😭💘<br><br>
+    Prometo: flores (aunque sean imaginarias), risas reales y un San Valentín inolvidable 😌✨<br>
+    <span style="opacity:.9">PD: el botón “No” ya puede descansar… estaba sudando.</span>
+  `;
 }
 
-.badge{
-  display:inline-block;
-  padding:8px 12px;
-  border-radius:999px;
-  background:rgba(255,255,255,.7);
-  border:1px solid rgba(0,0,0,.06);
-  font-size:.92rem;
-}
+// Repetir (reiniciar)
+againBtn.addEventListener("click", () => {
+  msgBox.classList.add("hidden");
+  hint.style.display = "block";
+  hint.textContent = "Ok, otra vez… pero el ‘No’ sigue nervioso 😅";
+  noCount = 0;
+  yesBtn.style.transform = "";
+  yesBtn.style.filter = "";
+  // reubicar NO al centro
+  noBtn.style.position = "relative";
+  noBtn.style.left = "";
+  noBtn.style.top = "";
+});
 
-h1{
-  margin: 14px 0 8px;
-  font-size: clamp(1.7rem, 4vw, 2.4rem);
-}
-.name{font-weight:800}
-.heart{display:inline-block; animation: pulse 1.2s infinite}
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.12)}
-}
+// Copiar link
+shareBtn.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(window.location.href);
+    hint.style.display = "block";
+    hint.textContent = "Link copiado 🔗✨ ¡Ahora envíaselo!";
+  } catch {
+    hint.style.display = "block";
+    hint.textContent = "No pude copiar automático 😅 copia el link del navegador.";
+  }
+});
 
-.question{
-  margin: 6px auto 18px;
-  font-size: 1.05rem;
-  line-height: 1.35;
-}
-.sub{
-  display:block;
-  margin-top:8px;
-  font-size:.98rem;
-  opacity:.85;
-}
 
-.controls{
-  position:relative;
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  align-items:center;
-  margin: 14px 0 10px;
-  min-height:58px;
-}
+// ---------- CONFETTI (simple y liviano) ----------
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
 
-.btn{
-  border:0;
-  padding: 12px 18px;
-  border-radius: 999px;
-  font-size: 1.05rem;
-  cursor:pointer;
-  box-shadow: 0 10px 25px rgba(0,0,0,.12);
-  transition: transform .08s ease, filter .2s ease;
-  user-select:none;
+function resizeCanvas() {
+  canvas.width = window.innerWidth * devicePixelRatio;
+  canvas.height = window.innerHeight * devicePixelRatio;
+  canvas.style.width = "100vw";
+  canvas.style.height = "100vh";
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
 }
-.btn:active{transform: translateY(1px) scale(.98)}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
 
-.yes{
-  background: #ff2d7a;
-  color:white;
-}
-.no{
-  background: white;
-  color:#222;
-  border:1px solid rgba(0,0,0,.12);
-  position:relative;
-}
+let confetti = [];
+let animId = null;
 
-.ghost{
-  background: rgba(255,255,255,.75);
-  border: 1px solid rgba(0,0,0,.08);
-  box-shadow:none;
-}
+function startConfetti(durationMs = 2000) {
+  const end = performance.now() + durationMs;
+  confetti = [];
 
-.hint{
-  margin: 8px 0 0;
-  font-size:.92rem;
-  opacity:.75;
-}
+  const colors = ["#ff2d7a","#ffd1dc","#ff8fb1","#ffffff","#ff5fa2","#ffb3c7"];
 
-.message{
-  margin: 16px auto 6px;
-  padding: 14px 14px 12px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.75);
-  border: 1px solid rgba(0,0,0,.08);
-}
-.message h2{margin:0 0 6px}
-.message p{margin:0 0 10px; line-height:1.35}
-.hidden{display:none}
+  for (let i=0; i<180; i++){
+    confetti.push({
+      x: Math.random() * window.innerWidth,
+      y: -20 - Math.random()*window.innerHeight*0.4,
+      w: 6 + Math.random()*6,
+      h: 8 + Math.random()*10,
+      vx: (Math.random()-0.5)*3,
+      vy: 2 + Math.random()*4,
+      rot: Math.random()*Math.PI,
+      vr: (Math.random()-0.5)*0.2,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      alpha: 0.8 + Math.random()*0.2
+    });
+  }
 
-.actions{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-}
+  function frame(now){
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
 
-.footer{
-  margin-top: 10px;
-  font-size:.95rem;
-  opacity:.85;
-}
+    confetti.forEach(p=>{
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
 
-/* Confetti canvas */
-#confetti{
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  pointer-events:none;
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+
+    confetti = confetti.filter(p => p.y < window.innerHeight + 40);
+
+    if (now < end && confetti.length > 0) {
+      animId = requestAnimationFrame(frame);
+    } else {
+      ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+      cancelAnimationFrame(animId);
+      animId = null;
+    }
+  }
+
+  animId = requestAnimationFrame(frame);
 }
 
