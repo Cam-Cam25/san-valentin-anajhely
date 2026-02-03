@@ -140,10 +140,15 @@ body{
 }
 
 .controls{
+  position: relative;         /* clave */
   display:flex;
   justify-content:center;
+  align-items:center;
   gap: 14px;
   margin: 14px 0 10px;
+
+  height: 72px;               /* área donde se moverá */
+  width: 100%;
 }
 
 .btn{
@@ -165,13 +170,12 @@ body{
 }
 
 .no{
-  background: rgba(255,255,255,.75);
-  border: 1px solid rgba(0,0,0,.12);
-  color:#222;
-
-  position: relative;   /* 🔴 empieza normal */
-  z-index: 5;
+  position: absolute;         /* se moverá dentro del .controls */
+  left: 50%;                  /* arranca cerca del centro */
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
+
 
 .ghost{
   background: rgba(255,255,255,.30);
