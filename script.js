@@ -5,6 +5,7 @@ const againBtn = document.getElementById("againBtn");
 const hint = document.getElementById("hint");
 const soundBtn = document.getElementById("soundBtn");
 const audio = document.getElementById("bgMusic");
+alert("JS nuevo cargado ❤️");
 
 // ---------- MÚSICA “EN TODO MOMENTO” (realista) ----------
 // Importante: navegadores móviles NO permiten audio con sonido sin interacción.
