@@ -103,6 +103,46 @@ body{
   position:relative;
 }
 
+.decor{
+  position: absolute;
+  width: 130px;
+  opacity: 0.75;
+  pointer-events: none; /* no bloquea clicks */
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,.25));
+}
+
+/* esquina superior izquierda */
+.decor-tl{
+  top: -40px;
+  left: -40px;
+  transform: rotate(-18deg);
+}
+
+/* esquina inferior derecha */
+.decor-br{
+  bottom: -40px;
+  right: -40px;
+  transform: rotate(12deg);
+}
+
+/* Ajustes para celular */
+@media (max-width: 600px){
+  .decor{
+    width: 90px;
+    opacity: 0.6;
+  }
+
+  .decor-tl{
+    top: -30px;
+    left: -30px;
+  }
+
+  .decor-br{
+    bottom: -30px;
+    right: -30px;
+  }
+}
+
 .badge{
   display:inline-block;
   padding: 9px 14px;
