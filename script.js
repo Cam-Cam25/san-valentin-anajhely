@@ -72,7 +72,7 @@ function moveNoInsideBox() {
   noBtn.style.top  = y + "px";
   noBtn.style.transform = "translate(0, 0)";
 
-  const msgs = ["¿Segura? 😳","Nope 😅","Intenta otra vez 😂","Jeje 💘","Kevin confía en ti 💙"];
+  const msgs = ["¿Segura? 😳","Nope 😅","Intenta otra vez 😂","Jeje 💘","Confío en ti 💙"];
   if (hint) hint.textContent = msgs[Math.floor(Math.random()*msgs.length)];
 }
 
