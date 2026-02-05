@@ -105,7 +105,7 @@ body{
 
 .decor{
   position: absolute;
-  width: 170px;              /* 🔥 más grande */
+  width: 165px;              /* 🔥 más grande */
   opacity: 0.78;
   pointer-events: none;
   filter: drop-shadow(0 12px 26px rgba(0,0,0,.28));
