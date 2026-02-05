@@ -105,41 +105,40 @@ body{
 
 .decor{
   position: absolute;
-  width: 130px;
-  opacity: 0.75;
-  pointer-events: none; /* no bloquea clicks */
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,.25));
+  width: 170px;              /* 🔥 más grande */
+  opacity: 0.78;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 26px rgba(0,0,0,.28));
 }
 
 /* esquina superior izquierda */
 .decor-tl{
-  top: -40px;
-  left: -40px;
+  top: -55px;                /* ajustado */
+  left: -55px;
   transform: rotate(-18deg);
 }
 
 /* esquina inferior derecha */
 .decor-br{
-  bottom: -40px;
-  right: -40px;
+  bottom: -55px;             /* ajustado */
+  right: -55px;
   transform: rotate(12deg);
 }
 
-/* Ajustes para celular */
 @media (max-width: 600px){
   .decor{
-    width: 90px;
-    opacity: 0.6;
+    width: 120px;
+    opacity: 0.65;
   }
 
   .decor-tl{
-    top: -30px;
-    left: -30px;
+    top: -40px;
+    left: -40px;
   }
 
   .decor-br{
-    bottom: -30px;
-    right: -30px;
+    bottom: -40px;
+    right: -40px;
   }
 }
 
